@@ -1,5 +1,5 @@
-zeromq-snippets
-===============
+ZeroMQ C++ Snippets
+===================
 
 ZeroMQ Snippets
 
