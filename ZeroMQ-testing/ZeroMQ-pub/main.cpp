@@ -5,11 +5,19 @@
 
 std::string eth0IP = "10.172.132.58";
 
+struct TestMessage
+{
+    char p1[250];
+    char p2[250];
+};
+
 /**
 * Publisher example
 */
 int main()
 {
+    std::string astring("12345678901234567890123456789012345678901234567890");
+
     // Set up the connection
     zmq::context_t context(1);
     zmq::socket_t * pZmqSocket = new zmq::socket_t(context, ZMQ_PUB);
@@ -27,10 +35,12 @@ int main()
     while (1)
     {
         std::cout << "Sending Heartbeat Message" << std::endl;
-        std::string szMessageData = "Foo";
+        TestMessage * pTestMsg = new TestMessage();
+        strcpy(pTestMsg->p1, "Foo");
+        strcpy(pTestMsg->p2, "Bar");
         
-        zmq::message_t * zmqMsgOut = new zmq::message_t(sizeof(szMessageData) + 1);
-        memcpy((void *)zmqMsgOut->data(), szMessageData.data(), sizeof(szMessageData));
+        zmq::message_t * zmqMsgOut = new zmq::message_t(sizeof(TestMessage));
+        memcpy((void *)zmqMsgOut->data(), pTestMsg, sizeof(TestMessage));
         
         try
         {

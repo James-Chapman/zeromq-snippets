@@ -5,6 +5,12 @@
 
 std::string eth0IP = "10.172.132.58";
 
+struct TestMessage
+{
+    char p1[250];
+    char p2[250];
+};
+
 /**
 * Subscriber example
 */
