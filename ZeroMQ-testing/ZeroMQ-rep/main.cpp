@@ -3,6 +3,12 @@
 
 #include "zmq.hpp"
 
+struct TestMessage
+{
+    char p1[250];
+    char p2[250];
+};
+
 /**
 * Reply example
 */
@@ -39,7 +45,7 @@ int main()
         }
 
         // Create the REPLY message and copy data from the REQUEST message
-        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(pZmqMsgIn->data()) + 1);
+        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(pZmqMsgIn->data()));
         memcpy((void *)pZmqMsgOut->data(), pZmqMsgIn->data(), sizeof(pZmqMsgIn->data()));
 
         // Send the REPLY message

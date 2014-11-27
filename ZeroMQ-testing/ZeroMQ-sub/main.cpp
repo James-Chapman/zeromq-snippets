@@ -3,7 +3,7 @@
 
 #include "zmq.hpp"
 
-std::string eth0IP = "10.172.132.58";
+std::string eth0IP = "192.168.0.15";
 
 struct TestMessage
 {

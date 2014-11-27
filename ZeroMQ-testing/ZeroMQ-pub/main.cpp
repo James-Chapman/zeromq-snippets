@@ -3,7 +3,7 @@
 
 #include "zmq.hpp"
 
-std::string eth0IP = "10.172.132.58";
+std::string eth0IP = "192.168.0.15";
 
 struct TestMessage
 {
@@ -16,8 +16,6 @@ struct TestMessage
 */
 int main()
 {
-    std::string astring("12345678901234567890123456789012345678901234567890");
-
     // Set up the connection
     zmq::context_t context(1);
     zmq::socket_t * pZmqSocket = new zmq::socket_t(context, ZMQ_PUB);

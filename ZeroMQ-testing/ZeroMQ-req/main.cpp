@@ -3,6 +3,12 @@
 
 #include "zmq.hpp"
 
+struct TestMessage
+{
+    char p1[250];
+    char p2[250];
+};
+
 /**
 * Request example
 */
@@ -19,9 +25,12 @@ int main()
         pZmqSocket->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
 
         // Construct the REQUEST message
-        std::string szMessageData = "Foo Bar";
-        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(szMessageData) + 1);
-        memcpy((void *)pZmqMsgOut->data(), szMessageData.data(), sizeof(szMessageData));
+        TestMessage * pTestMsg = new TestMessage();
+        strcpy(pTestMsg->p1, "Foo");
+        strcpy(pTestMsg->p2, "Bar");
+
+        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(TestMessage));
+        memcpy((void *)pZmqMsgOut->data(), pTestMsg, sizeof(TestMessage));
 
         // Send the message
         try
