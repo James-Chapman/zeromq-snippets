@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "zmq.hpp"
 
-std::string eth0IP = "192.168.0.15";
+#define PING_PORT_NUMBER 9999
+#define PING_MSG_SIZE    1
+#define PING_INTERVAL    1000  //  Once per second
 
 struct TestMessage
 {
@@ -19,14 +22,18 @@ int main()
     // Set up the connection
     zmq::context_t context(1);
     zmq::socket_t * pZmqSocket = new zmq::socket_t(context, ZMQ_PUB);
-    std::string publishAddress = "epgm://" + eth0IP + ";239.192.1.1:5555";
+    std::string publishAddress = "tcp://*:5555";
+
     try
     {
         pZmqSocket->bind(publishAddress.c_str());
+        std::cout << publishAddress << " bound" << std::endl;
     }
     catch (std::exception& e)
     {
         std::cerr << "Exception caught during socket.bind(): " << e.what() << std::endl;
+        Sleep(5000);
+        return 1;
     }
 
     // Send the message
@@ -36,10 +43,10 @@ int main()
         TestMessage * pTestMsg = new TestMessage();
         strcpy(pTestMsg->p1, "Foo");
         strcpy(pTestMsg->p2, "Bar");
-        
+
         zmq::message_t * zmqMsgOut = new zmq::message_t(sizeof(TestMessage));
         memcpy((void *)zmqMsgOut->data(), pTestMsg, sizeof(TestMessage));
-        
+
         try
         {
             if (pZmqSocket->send(*zmqMsgOut))

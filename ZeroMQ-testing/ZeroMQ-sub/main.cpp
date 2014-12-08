@@ -2,14 +2,14 @@
 #include <string>
 
 #include "zmq.hpp"
-
-std::string eth0IP = "192.168.0.15";
+#include "zmq_utils.h"
 
 struct TestMessage
 {
     char p1[250];
     char p2[250];
 };
+
 
 /**
 * Subscriber example
@@ -18,17 +18,20 @@ int main()
 {
     zmq::context_t zmqContext(1);
     zmq::socket_t * pZmqSocket = new zmq::socket_t(zmqContext, ZMQ_SUB);
-    std::string subscribeAddress = "epgm://" + eth0IP + ";239.192.1.1:5555";
+    pZmqSocket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+
+    std::string subscribeAddress = "tcp://127.0.0.1:5555";
     try
     {
         pZmqSocket->connect(subscribeAddress.c_str());
+        std::cout << subscribeAddress << " bound" << std::endl;
     }
     catch (std::exception& e)
     {
         std::cerr << "Exception caught during socket.connect(): " << e.what() << std::endl;
+        Sleep(5000);
+        return 1;
     }
-    pZmqSocket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
-    std::cout << "Heartbeat responder BOUND" << std::endl;
     while (1)
     {
         std::cout << ".";
