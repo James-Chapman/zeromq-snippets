@@ -1,7 +1,7 @@
 /*******************************************************************************
 * Author      : James Chapman
 * License     : MIT/X11 (http://directory.fsf.org/wiki/License:X11)
-* Description : Simple UDP ping example
+* Description : Simple UDP ping example for Windows VS
 ********************************************************************************/
 
 #include <atomic>
@@ -49,9 +49,6 @@ void listener()
     WSADATA wsaData;
     #endif // _WIN32
     int nResult = 0;
-    int nOptOffVal = 0;
-    int nOptOnVal = 1;
-    int nOptLen = sizeof(int);
 
     #ifdef _WIN32
     // Initialize Winsock
