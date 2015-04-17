@@ -157,7 +157,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="serialize.hpp" />
+    <ClInclude Include="TestMessage.hpp" />
     <ClInclude Include="zmq.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

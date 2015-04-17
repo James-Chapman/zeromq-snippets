@@ -1,12 +1,15 @@
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <vector>
 #include <sstream>
+#include <cstdint>
 
-#include "Message.hpp"
+#include "TestMessage.hpp"
 #include "zmq.hpp"
 
-
+#ifndef _WIN32
+typedef char BYTE;
+#endif
 
 
 void printData(TestMessage & data)

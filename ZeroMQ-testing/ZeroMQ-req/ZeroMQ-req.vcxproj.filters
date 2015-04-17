@@ -23,7 +23,7 @@
     <ClInclude Include="zmq.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="serialize.hpp">
+    <ClInclude Include="TestMessage.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
