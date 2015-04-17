@@ -1,13 +1,25 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <sstream>
 
+#include "Message.hpp"
 #include "zmq.hpp"
 
-struct TestMessage
+
+
+
+void printData(TestMessage & data)
 {
-    char p1[250];
-    char p2[250];
-};
+    std::cout << std::endl;
+    std::cout << "m_TotalSize: " << data.m_MessageSize << std::endl;
+    std::cout << "m_p1Size: " << data.m_p1Size << std::endl;
+    std::cout << "m_p2Size: " << data.m_p2Size << std::endl;
+    std::cout << "m_p1: " << data.m_p1 << std::endl;
+    std::cout << "m_p2: " << data.m_p2 << std::endl;
+    std::cout << std::endl;
+}
+
 
 /**
 * Reply example
@@ -21,53 +33,68 @@ int main()
     pZmqSocket->bind(listenAddress.c_str());
     while (1)
     {
-        pZmqSocket->connected();
-        // Create a REQUEST message pointer
-        zmq::message_t * pZmqMsgIn = new zmq::message_t();
-
-        // Receive the REQUEST message
+        if (pZmqSocket->connected())
         {
-            try
+            // Create a REQUEST message pointer
+            zmq::message_t * pZmqMsgIn = new zmq::message_t();
+
+            char * buffer = nullptr;
+
+            // Receive the REQUEST message
             {
-                if (pZmqSocket->recv(pZmqMsgIn))
+                try
                 {
-                    std::cout << "REQUEST Message Received" << std::endl;
+                    if (pZmqSocket->recv(pZmqMsgIn))
+                    {
+                        std::cout << "REQUEST Message Received" << std::endl;
+
+                        buffer = (char *)(pZmqMsgIn->data());
+                        std::istringstream iss(buffer);
+
+                        TestMessage recvData = TestMessage();
+                        recvData.deserialize(iss);
+
+                        printData(recvData);
+
+                    }
+                    else
+                    {
+                        std::cout << "REQUEST Message NOT Received" << std::endl;
+                    }
                 }
-                else
+                catch (std::exception& e)
                 {
-                    std::cout << "REQUEST Message NOT Received" << std::endl;
+                    std::cerr << "Exception caught during socket.recv(): " << e.what() << std::endl;
+                }
+
+
+            }
+
+            // Create the REPLY message and copy data from the REQUEST message
+            zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(pZmqMsgIn->data()));
+            memcpy((void *)pZmqMsgOut->data(), pZmqMsgIn->data(), sizeof(pZmqMsgIn->data()));
+
+            // Send the REPLY message
+            {
+                try
+                {
+                    if (pZmqSocket->send(*pZmqMsgOut))
+                    {
+                        std::cout << "REPLY Message Sent" << std::endl;
+                    }
+                    else
+                    {
+                        std::cerr << "REPLY Message NOT Sent." << std::endl;
+                    }
+                }
+                catch (std::exception& e)
+                {
+                    std::cerr << "Exception caught during socket.send(): " << e.what() << std::endl;
                 }
             }
-            catch (std::exception& e)
-            {
-                std::cerr << "Exception caught during socket.recv(): " << e.what() << std::endl;
-            }
+
+            delete pZmqMsgIn;
         }
-
-        // Create the REPLY message and copy data from the REQUEST message
-        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(pZmqMsgIn->data()));
-        memcpy((void *)pZmqMsgOut->data(), pZmqMsgIn->data(), sizeof(pZmqMsgIn->data()));
-
-        // Send the REPLY message
-        {
-            try
-            {
-                if (pZmqSocket->send(*pZmqMsgOut))
-                {
-                    std::cout << "REPLY Message Sent" << std::endl;
-                }
-                else
-                {
-                    std::cerr << "REPLY Message NOT Sent." << std::endl;
-                }
-            }
-            catch (std::exception& e)
-            {
-                std::cerr << "Exception caught during socket.send(): " << e.what() << std::endl;
-            }
-        }
-
-        delete pZmqMsgIn;
     }
 
     delete pZmqSocket;

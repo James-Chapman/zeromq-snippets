@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroMQ-pub", "ZeroMQ-pub\ZeroMQ-pub.vcxproj", "{AB113C8D-5208-4C6F-8E90-597BB6644717}"
@@ -10,6 +10,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroMQ-req", "ZeroMQ-req\ZeroMQ-req.vcxproj", "{49EAD5FD-7F0B-45E5-8794-5EE6515FCA57}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroMQ-rep", "ZeroMQ-rep\ZeroMQ-rep.vcxproj", "{60F72816-30E1-4732-B60C-BCF6B50DB53F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDP-ping", "UDP-ping\UDP-ping.vcxproj", "{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,17 @@ Global
 		{60F72816-30E1-4732-B60C-BCF6B50DB53F}.Release|Win32.ActiveCfg = Release|Win32
 		{60F72816-30E1-4732-B60C-BCF6B50DB53F}.Release|Win32.Build.0 = Release|Win32
 		{60F72816-30E1-4732-B60C-BCF6B50DB53F}.Release|x64.ActiveCfg = Release|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Debug|Win32.Build.0 = Debug|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Debug|x64.ActiveCfg = Debug|x64
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Debug|x64.Build.0 = Debug|x64
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Release|Win32.ActiveCfg = Release|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Release|Win32.Build.0 = Release|Win32
+		{B86B8220-FF04-4D09-B3E0-F56F4FC74A35}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

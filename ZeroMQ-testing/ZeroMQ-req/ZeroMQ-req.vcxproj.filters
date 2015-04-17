@@ -23,5 +23,8 @@
     <ClInclude Include="zmq.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="serialize.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

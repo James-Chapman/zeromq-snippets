@@ -1,13 +1,75 @@
 #include <iostream>
-#include <string>
+#include <cstring>
+#include <vector>
+#include <sstream>
+#include <cstdint>
 
 #include "zmq.hpp"
 
+//typedef char BYTE;
+
+// Struct representing the data to send down the wire
 struct TestMessage
 {
-    char p1[250];
-    char p2[250];
+    uint32_t m_MessageSize;
+    uint16_t m_p1Size;
+    uint16_t m_p2Size;
+    std::string m_p1;
+    std::string m_p2;
+
+    std::ostream& serialize(std::ostream &out) const
+    {
+        out << m_MessageSize;
+        out << ",";
+        out << m_p1Size;
+        out << ",";
+        out << m_p2Size;
+        out << ",";
+        out << m_p1;
+        out << ",";
+        out << m_p2;
+        return out;
+    }
+
+    std::istream& deserialize(std::istream &in)
+    {
+        if (in)
+        {
+            char comma;
+            in >> m_MessageSize;
+            in >> comma;
+            in >> m_p1Size;
+            in >> comma;
+            in >> m_p2Size;
+            in >> comma;
+            {
+                std::vector<char> tmp(m_p1Size);
+                in.read(&tmp[0], m_p1Size);
+                m_p1.assign(&tmp[0], m_p1Size);
+            }
+            in >> comma;
+            {
+                std::vector<char> tmp(m_p2Size);
+                in.read(&tmp[0], m_p2Size);
+                m_p2.assign(&tmp[0], m_p2Size);
+            }
+        }
+        return in;
+    }
 };
+
+
+void printData(TestMessage & data)
+{
+    std::cout << std::endl;
+    std::cout << "m_TotalSize: " << data.m_MessageSize << std::endl;
+    std::cout << "m_p1Size: " << data.m_p1Size << std::endl;
+    std::cout << "m_p2Size: " << data.m_p2Size << std::endl;
+    std::cout << "m_p1: " << data.m_p1 << std::endl;
+    std::cout << "m_p2: " << data.m_p2 << std::endl;
+    std::cout << std::endl;
+}
+
 
 /**
 * Request example
@@ -16,6 +78,8 @@ int main()
 {
     for (int i = 0; i < 10; i++)
     {
+        const char * buffer = nullptr;
+
         // Set up the connection
         zmq::context_t context(1);
         zmq::socket_t * pZmqSocket = new zmq::socket_t(context, ZMQ_REQ);
@@ -25,12 +89,24 @@ int main()
         pZmqSocket->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
 
         // Construct the REQUEST message
-        TestMessage * pTestMsg = new TestMessage();
-        strcpy(pTestMsg->p1, "Foo");
-        strcpy(pTestMsg->p2, "Bar");
+        TestMessage testMsg = TestMessage();
+        testMsg.m_p1 = "Foo";
+        testMsg.m_p2 = "Bar";
+        testMsg.m_p1Size = sizeof(testMsg.m_p1);
+        testMsg.m_p2Size = sizeof(testMsg.m_p2);
+        testMsg.m_MessageSize = sizeof(testMsg);
 
-        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(TestMessage));
-        memcpy((void *)pZmqMsgOut->data(), pTestMsg, sizeof(TestMessage));
+        // create stream object and serialise
+        std::ostringstream out;
+        testMsg.serialize(out);
+        std::string s(out.str());
+        buffer = s.c_str();
+
+        zmq::message_t * pZmqMsgOut = new zmq::message_t(sizeof(buffer));
+        memcpy(pZmqMsgOut->data(), buffer, sizeof(buffer));
+
+        printData(testMsg);
+        std::cout << "sizeof(buffer): " << sizeof(buffer) << std::endl;
 
         // Send the message
         try
